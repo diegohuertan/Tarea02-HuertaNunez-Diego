@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    std::cout << "Procesando con " << numThreads << " threads." << std::endl;
+    std::cout << "Threads para usar " << numThreads << " threads." << std::endl;
     
     std::vector<std::thread> threads;
     const int lineasporThread = textInMemory.size()/numThreads;
