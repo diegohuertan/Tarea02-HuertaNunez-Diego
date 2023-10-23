@@ -50,7 +50,7 @@ void procesarlineas(const std::vector<std::string>& lines, std::map<std::string,
 int main(int argc, char* argv[]) {
     std::vector<std::string> textInMemory;
     std::string fileName = "data/quijote.txt";
-    int numThreads = 1;
+    int numThreads = 2;
 
     // Procesar los argumentos de línea de comandos
     int opt;
