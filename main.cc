@@ -1,11 +1,5 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
-#include <map>
-#include <thread>
-#include <mutex>
-#include <sstream>
+#include "global.hh"
+#include "checkArgs.hpp"
 
 std::string removePunctuation(const std::string& word) {
     std::string result;
@@ -49,23 +43,43 @@ void procesarlineas(const std::vector<std::string>& lines, std::map<std::string,
     }
 }
 
-int main() {
-    std::vector<std::string> textInMemory;
-    std::string fileName = "data/quijote.txt";
-    std::ifstream file(fileName);
+int main(int argc, char* argv[]) {
+    ArgsHandler args(argc, argv);
 
-    if (!file) {
-        std::cerr << "No se pudo abrir el archivo." << std::endl;
+    if (args.shouldShowHelp()) {
+        std::cout << "Modo de uso: ./histograma_mt --threads N --file FILENAME [--help]\n--threads: cantidad de threads a utilizar. Si es 1, entonces ejecuta la versión secuencial.\n--file: archivo a procesar.\n--help: muestra este mensaje y termina." << std::endl;
+        return EXIT_SUCCESS;
+    }
+
+    int numThreads = args.getNumThreads();
+    std::string filename = args.getFilename();
+
+    if (filename.empty()) {
+        std::cerr << "No se proporcionó un nombre de archivo (-f)." << std::endl;
+        std::cout << "Modo de uso: ./histograma_mt --threads N --file FILENAME [--help]\n--threads: cantidad de threads a utilizar. Si es 1, entonces ejecuta la versión secuencial.\n--file: archivo a procesar.\n--help: muestra este mensaje y termina." << std::endl;
         return EXIT_FAILURE;
     }
 
-    std::string line;
-    while (std::getline(file, line)) {
-        textInMemory.push_back(line);
-    }
-    file.close();
+    std::vector<std::string> textInMemory;
+    try {
+        std::ifstream file(filename);
+        if (!file) {
+            std::cerr << "No se pudo abrir el archivo." << std::endl;
+            return EXIT_FAILURE;
+        }
 
-    const int numThreads = 8;
+        std::string line;
+        while (std::getline(file, line)) {
+            textInMemory.push_back(line);
+        }
+        file.close();
+    } catch (const std::exception& e) {
+        std::cerr << "Error al procesar el archivo: " << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    std::cout << "Procesando con " << numThreads << " threads." << std::endl;
+    
     std::vector<std::thread> threads;
     const int lineasporThread = textInMemory.size()/numThreads;
     std::vector<std::map<std::string, int>> histogramas(numThreads);
