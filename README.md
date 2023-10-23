@@ -1,4 +1,6 @@
 # Tarea2So
  
 Integrantes:
-nombre: Diego Huerta Rut: 21.322.097-7 Correo: diego.huertan@alumnos.uv.cl
+Diego Huerta diego.huertan@alumnos.uv.cl
+Vicente Miralles Vicente.miralles@alumnos.uv.cl
+Matias Rivas matias.rivas@alumnos.uv.cl
