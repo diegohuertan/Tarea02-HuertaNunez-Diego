@@ -1,4 +1,4 @@
-# Tarea2So
+# Tarea 02 Sistemas Operativos
 
 ## Integrantes
 
