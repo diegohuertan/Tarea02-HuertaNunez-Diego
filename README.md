@@ -1,8 +1,7 @@
 # Tarea2So
- 
-Integrantes:
-Diego Huerta diego.huertan@alumnos.uv.cl /n
 
-Vicente Miralles Vicente.miralles@alumnos.uv.cl
+## Integrantes
 
-Matias Rivas matias.rivas@alumnos.uv.cl
+- Diego Huerta (diego.huertan@alumnos.uv.cl)
+- Vicente Miralles (Vicente.miralles@alumnos.uv.cl)
+- Matías Rivas (matias.rivas@alumnos.uv.cl)
