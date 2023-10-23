@@ -48,33 +48,19 @@ void procesarlineas(const std::vector<std::string>& lines, std::map<std::string,
 }
 
 int main(int argc, char* argv[]) {
-    std::vector<std::string> textInMemory;
-    std::string fileName = "data/quijote.txt";
-    int numThreads = 2;
+    ArgsHandler args(argc, argv);
 
-    // Procesar los argumentos de línea de comandos
-    int opt;
-    while ((opt = getopt(argc, argv, "f:t:h")) != -1) {
-        switch (opt) {
-            case 'f':
-                fileName = optarg;
-                break;
-            case 't':
-                numThreads = std::stoi(optarg);
-                break;
-            case 'h':
-                std::cout << "Modo de uso: " << argv[0] << " --threads N --file FILENAME [--help]" << std::endl;
-                std::cout << " --threads: cantidad de threads a utilizar. Si es 1, entonces ejecuta la versión secuencial." << std::endl;
-                std::cout << " --file : archivo a procesar." << std::endl;
-                std::cout << " --help : muestra este mensaje y termina." << std::endl;
-                return EXIT_SUCCESS;
-            default:
-                std::cerr << "Uso: " << argv[0] << " [-f archivo] [-t hilos]" << std::endl;
-                return EXIT_FAILURE;
-        }
+    if (args.shouldShowHelp()) {
+        std::cout << "Modo de uso: ./histograma_mt --threads N --file FILENAME [--help]\n--threads: cantidad de threads a utilizar. Si es 1, entonces ejecuta la versión secuencial.\n--file: archivo a procesar.\n--help: muestra este mensaje y termina." << std::endl;
+        return EXIT_SUCCESS;
     }
 
-    std::ifstream file(fileName);
+    int numThreads = args.getNumThreads();
+    std::cout << "Thread " << numThreads << " Lineas por thread " << lineaFinal - lineaInicial << " lineas." << std::endl;
+    std::string filename = args.getFilename();
+
+    std::vector<std::string> textInMemory;
+    std::ifstream file(filename);
     if (!file) {
         std::cerr << "No se pudo abrir el archivo." << std::endl;
         return EXIT_FAILURE;
@@ -95,7 +81,7 @@ int main(int argc, char* argv[]) {
         int lineaInicial = i * lineasporThread;
         int lineaFinal = (i == numThreads - 1) ? textInMemory.size() : (i + 1) * lineasporThread;
         std::vector<std::string> lines(textInMemory.begin() + lineaInicial, textInMemory.begin() + lineaFinal);
-        std::cout << "Thread " << i << " Lineas por thread " << lineaFinal - lineaInicial << " lineas." << std::endl;
+        
         threads.emplace_back([&histogramas, i, lines, &mtx]() {
             procesarlineas(lines, histogramas[i], mtx);
         }); //Aqui le asigno a un thread la funcion procesar lineas
